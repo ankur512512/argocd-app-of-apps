@@ -1,0 +1,29 @@
+## Kube-prometheus-stack helm chart values override
+
+kube_prometheus_stack:
+  prometheus:
+    additionalServiceMonitors:
+    - name: "ankur"
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: pythonauth
+      endpoints:
+      - port: http
+        path: /metrics
+        interval: 10s
+      namespaceSelector:
+        matchNames:
+        - default
+  grafana:
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      hosts:
+      - ak.webhop.me
+      path: /
+      tls:
+      - hosts:
+        - ak.webhop.me
+        secretName: ak-webhop-me

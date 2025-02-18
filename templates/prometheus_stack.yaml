@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+spec:
+  destination:
+    name: ''
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  source:
+    path: ''
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 69.3.0
+    chart: kube-prometheus-stack
+    helm:
+      valuesObject:
+        prometheus:
+          {{- toYaml .Values.kube_prometheus_stack.prometheus | nindent 10 }}
+        grafana:
+          {{- toYaml .Values.kube_prometheus_stack.grafana | nindent 10 }}
+  sources: []
+  project: default
+  syncPolicy:
+    automated: null
